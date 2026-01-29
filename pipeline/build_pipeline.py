@@ -3,8 +3,10 @@ from src.vector_store import VectorStoreBuilder
 from dotenv import load_dotenv
 from utils.logger import get_logger
 from utils.custom_exception import CustomException
+from pathlib import Path
 
-load_dotenv()
+# load_dotenv()
+load_dotenv(dotenv_path=Path(__file__).resolve().parents[1] / ".env")
 
 logger = get_logger(__name__)
 

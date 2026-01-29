@@ -1,10 +1,12 @@
-from langchain.text_splitter import CharacterTextSplitter
+from langchain_classic.text_splitter import CharacterTextSplitter
 from langchain_community.vectorstores import Chroma
 from langchain_community.document_loaders.csv_loader import CSVLoader
 from langchain_huggingface import HuggingFaceEmbeddings
-
 from dotenv import load_dotenv
-load_dotenv()
+from pathlib import Path
+
+# load_dotenv()
+load_dotenv(dotenv_path=Path(__file__).resolve().parents[1] / ".env")
 
 class VectorStoreBuilder:
     def __init__(self,csv_path:str,persist_dir:str="chroma_db"):
@@ -25,7 +27,7 @@ class VectorStoreBuilder:
         texts = splitter.split_documents(data)
 
         db = Chroma.from_documents(texts,self.embedding,persist_directory=self.persist_dir)
-        db.persist()
+        # db.persist()
 
     def load_vector_store(self):
         return Chroma(persist_directory=self.persist_dir,embedding_function=self.embedding)
