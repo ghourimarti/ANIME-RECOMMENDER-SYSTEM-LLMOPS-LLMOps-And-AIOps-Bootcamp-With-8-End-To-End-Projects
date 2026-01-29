@@ -1,29 +1,34 @@
-## Parent image
-FROM python:3.10-slim
+# ---------- Build arguments (WITH DEFAULTS) ----------
+ARG BASE_IMAGE=python:3.10-slim
+ARG EXPOSED_PORT=8200
+ARG VOLUME_PATH=/app/chroma_db
 
-## Essential environment variables
+# ---------- Base image ----------
+FROM ${BASE_IMAGE}
+# FROM python:3.10-slim
+
+# ---------- Environment ----------
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1
 
-## Work directory inside the docker container
+# Work directory inside the docker container
 WORKDIR /app
 
-## Installing system dependancies
+# ---------- System dependencies ----------
 RUN apt-get update && apt-get install -y \
     build-essential \
     curl \
     && rm -rf /var/lib/apt/lists/*
 
-## Copying ur all contents from local to app
+# ---------- Copy project ----------
 COPY . .
 
-## Run setup.py
+# ---------- Install project ----------
 RUN pip install --no-cache-dir -e .
 
-# Used PORTS
-EXPOSE 8501
-
-VOLUME /var/lib/ghourimarti-llm-app
+# ---------- Runtime config ----------
+EXPOSE ${EXPOSED_PORT}
+# VOLUME ${VOLUME_PATH}
 
 # Run the app 
 # CMD ["streamlit", "run", "app/app.py", "--server.port=8501", "--server.address=0.0.0.0","--server.headless=true"]

@@ -1,0 +1,30 @@
+services:
+  anime-recommender:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        BASE_IMAGE: python:3.10-slim
+        EXPOSED_PORT: 8501
+        VOLUME_PATH: /var/lib/ghourimarti-llm-app
+    image: ghourimarti/anime-recommender:v3
+    env_file:
+      - .env
+    volumes:
+      - anime_data:/app/chroma_db
+    networks:
+      - anime_net
+    ports:
+      - "8502:8501"
+    deploy:
+      replicas: 10
+    restart: unless-stopped
+
+networks:
+  anime_net:
+    driver: bridge
+
+volumes:
+  anime_data:
+    driver: local
+
